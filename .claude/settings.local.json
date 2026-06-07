@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/GHDra/.claude/plugins/marketplaces//**)",
+      "Read(//c/Users/GHDra/.claude/skills//**)",
+      "WebFetch(domain:github.com)",
+      "WebSearch",
+      "Bash(pip install *)",
+      "Bash(markitdown *)",
+      "Bash(pip show *)",
+      "Bash(python -c ' *)"
+    ],
+    "deny": [
+      "Read(**/.ssh/**)",
+      "Read(**/.aws/**)",
+      "Read(**/.azure/**)",
+      "Read(**/.gcloud/**)",
+      "Read(**/AppData/**/Credential/**)",
+      "Read(**/AppData/Roaming/Mozilla/**)",
+      "Read(**/AppData/Local/Google/Chrome/User Data/**)",
+      "Read(//c/Windows/**)",
+      "Read(//c/Windows/System32/**)",
+      "Edit(**/.ssh/**)",
+      "Edit(**/.aws/**)",
+      "Edit(**/.azure/**)",
+      "Edit(**/.gcloud/**)",
+      "Write(**/.ssh/**)",
+      "Write(**/.aws/**)",
+      "Write(**/.azure/**)",
+      "Write(**/.gcloud/**)",
+      "Write(//c/Windows/**)",
+      "Write(//c/Program Files/**)",
+      "Write(//c/Program Files (x86)/**)",
+      "Bash(rm -rf /*)",
+      "Bash(del /f /s C:*)",
+      "Bash(format *)",
+      "Bash(shutdown *)",
+      "Bash(reg delete *)"
+    ]
+  }
+}

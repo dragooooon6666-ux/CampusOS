@@ -1,0 +1,57 @@
+<h2>问题 6：Phase 1 文件监控范围</h2>
+<p class="subtitle">智能文件中心应该监控哪些位置？这决定了架构复杂度。</p>
+
+<div class="options">
+  <div class="option" data-choice="local" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>仅本地 input 文件夹（最简单）</h3>
+      <p>沿用现有模式。用户把文件放入 input → 自动整理。一个入口，逻辑清晰。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="desktop" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>input + 桌面（推荐）</h3>
+      <p>监控桌面新增文件，自动同步到 input 并归档。最符合"整理桌面"的用户场景。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="multi" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>input + 桌面 + 下载 + 自定义</h3>
+      <p>完整版多源监控。用户可在设置中添加任意文件夹。最强大但 Phase 1 实现成本高。</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="mockup">
+    <div class="mockup-header">监控源设置界面预览（方案 B/C 通用）</div>
+    <div class="mockup-body">
+      <div style="padding:16px;background:#fafafa;border-radius:8px;">
+        <div style="margin-bottom:12px;">
+          <div style="font-weight:600;margin-bottom:8px;">📡 监控源管理</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff;border-radius:6px;">
+              <span style="width:24px;text-align:center;">🟢</span>
+              <span style="flex:1;">📂 项目 input 文件夹</span>
+              <span style="font-size:11px;color:#6b7280;">始终启用</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff;border-radius:6px;">
+              <span style="width:24px;text-align:center;">🟢</span>
+              <span style="flex:1;">🖥️ 桌面</span>
+              <span style="font-size:11px;color:#6b7280;">C:\Users\GHDra\Desktop</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff;border-radius:6px;opacity:0.5;">
+              <span style="width:24px;text-align:center;">⭕</span>
+              <span style="flex:1;">⬇️ 下载文件夹</span>
+              <span style="font-size:11px;color:#6b7280;">已禁用</span>
+            </div>
+          </div>
+        </div>
+        <button class="mock-button" style="font-size:12px;">+ 添加自定义文件夹</button>
+      </div>
+    </div>
+  </div>
+</div>

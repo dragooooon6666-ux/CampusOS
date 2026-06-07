@@ -1,0 +1,82 @@
+<h2>问题 5：项目数据模型 &amp; 项目首页</h2>
+<p class="subtitle">模块3的核心——打开 CampusOS 首先看到什么？项目的创建和关联流程是怎样的？</p>
+
+<div class="section">
+  <h3>项目首页（系统主界面）</h3>
+  <p>打开 localhost 后的第一个画面，不是文件列表，而是项目概览。</p>
+  <div class="mockup">
+    <div class="mockup-header">CampusOS 首页 — 项目看板</div>
+    <div class="mockup-body">
+      <div style="padding:16px;background:#fafafa;border-radius:8px;">
+        <!-- Top bar -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div>
+            <div style="font-weight:700;font-size:16px;">📋 学生会 · 项目看板</div>
+            <div style="font-size:12px;color:#6b7280;">2025-2026学年</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="mock-button" style="font-size:12px;">📁 文件中心</button>
+            <button class="mock-button" style="font-size:12px;background:#3b82f6;color:#fff;">+ 新建项目</button>
+          </div>
+        </div>
+        <!-- Project cards -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:start;">
+              <div style="font-weight:600;">🎉 2026迎新晚会</div>
+              <span style="font-size:11px;padding:2px 8px;background:#fef3c7;border-radius:10px;">进行中</span>
+            </div>
+            <div style="font-size:12px;color:#6b7280;margin-top:6px;">负责人：王小明 | 2026.9.1 - 2026.10.15</div>
+            <div style="font-size:12px;color:#6b7280;margin-top:4px;">📄 策划书 · 📰 新闻稿 · 📊 PPT · 🖼️ 12张照片</div>
+          </div>
+          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:start;">
+              <div style="font-weight:600;">🤝 2026校企合作会议</div>
+              <span style="font-size:11px;padding:2px 8px;background:#d1fae5;border-radius:10px;">已完成</span>
+            </div>
+            <div style="font-size:12px;color:#6b7280;margin-top:6px;">负责人：李思思 | 2026.3.10 - 2026.4.5</div>
+            <div style="font-size:12px;color:#6b7280;margin-top:4px;">📄 议程 · 📰 新闻稿 · 📋 总结 · 🖼️ 8张照片</div>
+          </div>
+          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:start;">
+              <div style="font-weight:600;">🏆 2026五四评优</div>
+              <span style="font-size:11px;padding:2px 8px;background:#dbeafe;border-radius:10px;">筹备中</span>
+            </div>
+            <div style="font-size:12px;color:#6b7280;margin-top:6px;">负责人：张伟 | 2026.4.1 -</div>
+            <div style="font-size:12px;color:#6b7280;margin-top:4px;">📄 通知 · 📋 申报表 · 📰 事迹材料</div>
+          </div>
+          <div style="background:#fff;border:1px dashed #d1d5db;border-radius:8px;padding:14px;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:13px;">
+            + 新建项目
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>项目创建与文件关联方式</h3>
+  <div class="options">
+    <div class="option" data-choice="auto" onclick="toggleSelect(this)">
+      <div class="letter">A</div>
+      <div class="content">
+        <h3>手动创建 + 手动关联</h3>
+        <p>用户创建项目，然后手动把文件拖入/归入该项目。最灵活但最费事。</p>
+      </div>
+    </div>
+    <div class="option" data-choice="semi" onclick="toggleSelect(this)">
+      <div class="letter">B</div>
+      <div class="content">
+        <h3>手动创建 + AI 自动关联（推荐）</h3>
+        <p>用户创建项目，AI 分析新文件后自动匹配到对应项目。用户可手动调整。</p>
+      </div>
+    </div>
+    <div class="option" data-choice="full" onclick="toggleSelect(this)">
+      <div class="letter">C</div>
+      <div class="content">
+        <h3>AI 自动创建项目</h3>
+        <p>AI 从文件批量和内容中推断项目存在，自动创建。省事但可能不准确。</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,80 @@
+<h2>问题 3：组织层级结构</h2>
+<p class="subtitle">文件中心的归档结构应该如何设计？</p>
+
+<div class="section">
+  <h3>方案 A：扁平列表（简单直接）</h3>
+  <p>所有组织平铺，用户选一个归档。类似现在 FileOrganizer 的分类模式。</p>
+  <div class="mockup">
+    <div class="mockup-header">文件归档 — 选择归属组织</div>
+    <div class="mockup-body">
+      <div style="padding:16px;background:#fafafa;border-radius:8px;">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="padding:10px 14px;background:#fff;border:1px solid #e5e7eb;border-radius:6px;display:flex;align-items:center;gap:10px;">
+            <span style="font-size:18px;">🏛️</span> <span>团委</span>
+          </div>
+          <div style="padding:10px 14px;background:#fff;border:1px solid #e5e7eb;border-radius:6px;display:flex;align-items:center;gap:10px;">
+            <span style="font-size:18px;">📋</span> <span>学生会</span>
+          </div>
+          <div style="padding:10px 14px;background:#fff;border:1px solid #e5e7eb;border-radius:6px;display:flex;align-items:center;gap:10px;">
+            <span style="font-size:18px;">💼</span> <span>就业服务部</span>
+          </div>
+          <div style="padding:10px 14px;background:#fff;border:1px solid #e5e7eb;border-radius:6px;display:flex;align-items:center;gap:10px;">
+            <span style="font-size:18px;">🔬</span> <span>科创部</span>
+          </div>
+          <div style="padding:10px 14px;background:#fff;border:1px solid #e5e7eb;border-radius:6px;display:flex;align-items:center;gap:10px;">
+            <span style="font-size:18px;">🚩</span> <span>党支部</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>方案 B：二级树形（部门 → 活动/项目）</h3>
+  <p>每个组织下有子分类，文件归属更精确。结构更深但更有序。</p>
+  <div class="mockup">
+    <div class="mockup-header">文件归档 — 组织 → 项目层级</div>
+    <div class="mockup-body">
+      <div style="padding:16px;background:#fafafa;border-radius:8px;">
+        <div style="display:flex;flex-direction:column;gap:4px;font-family:monospace;font-size:13px;">
+          <div>📁 <b>团委</b></div>
+          <div style="margin-left:20px;">├─ 📂 2025五四评优</div>
+          <div style="margin-left:20px;">├─ 📂 2025团日活动</div>
+          <div style="margin-left:20px;">└─ 📂 2026春季推优</div>
+          <div style="margin-top:8px;">📁 <b>学生会</b></div>
+          <div style="margin-left:20px;">├─ 📂 迎新晚会</div>
+          <div style="margin-left:20px;">├─ 📂 校园歌手大赛</div>
+          <div style="margin-left:20px;">└─ 📂 校企合作会议</div>
+          <div style="margin-top:8px;">📁 <b>就业服务部</b></div>
+          <div style="margin-left:20px;">├─ 📂 春季招聘会</div>
+          <div style="margin-left:20px;">└─ 📂 企业宣讲会</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>扁平列表</h3>
+      <p>简单够用，适合组织数量少、文件量不大的场景</p>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>二级树形</h3>
+      <p>更接近真实组织结构，但需要更多配置和维护</p>
+    </div>
+  </div>
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>B + 可自定义</h3>
+      <p>二级树形基础上，允许用户在设置中添加/修改/删除组织和子项目</p>
+    </div>
+  </div>
+</div>
