@@ -136,6 +136,8 @@
   .scroll-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);animation:bob 2s ease-in-out infinite}
   @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
   .scroll-hint span{display:block;width:20px;height:20px;border-right:2px solid oklch(0.55 0.01 255);border-bottom:2px solid oklch(0.55 0.01 255);transform:rotate(45deg)}
+  .btn-dl-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px oklch(0.55 0.18 255 / 0.35)}
+  .btn-dl-secondary:hover{transform:translateY(-2px);background:var(--surface)}
 
   /* ── Responsive ── */
   @media(max-width:768px){
@@ -165,6 +167,7 @@
   <a href="#feature3" data-index="4"></a>
   <a href="#vision" data-index="5"></a>
   <a href="#cta" data-index="6"></a>
+  <a href="#download" data-index="7"></a>
 </div>
 
 <!-- Top Nav -->
@@ -380,6 +383,31 @@
       <input type="text" name="wechat" placeholder="微信号（选填）">
       <button type="submit" id="submitBtn">加入等候名单</button>
     </form>
+  </div>
+</section>
+
+<!-- ===== PAGE 8: DOWNLOAD ===== -->
+<section class="page" id="download">
+  <div class="container reveal">
+    <span class="section-tag">GET STARTED</span>
+    <h2>开始使用 CampusOS</h2>
+    <p style="text-align:center;max-width:520px;margin:12px auto 36px;font-size:1rem">完全免费，本地运行，数据安全。Windows 10/11 即装即用。</p>
+    <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap">
+      <a href="https://github.com/dragooooon6666-ux/CampusOS/releases/latest/download/CampusOS-Setup-v0.1.0.exe" class="btn-dl-primary" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:24px 40px;border-radius:14px;background:var(--primary);color:#fff;text-decoration:none;transition:transform 150ms ease,box-shadow 150ms ease">
+        <span style="font-size:2rem">📥</span>
+        <span style="font-weight:700;font-size:1.125rem">下载安装程序</span>
+        <span style="font-size:0.8125rem;opacity:0.75">Windows · 一键安装</span>
+      </a>
+      <a href="https://github.com/dragooooon6666-ux/CampusOS/releases/latest/download/CampusOS-v0.1.0.zip" class="btn-dl-secondary" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:24px 40px;border-radius:14px;border:1.5px solid var(--border);color:var(--ink);text-decoration:none;transition:transform 150ms ease,background 150ms ease">
+        <span style="font-size:2rem">📦</span>
+        <span style="font-weight:600;font-size:1.125rem">下载免安装版</span>
+        <span style="font-size:0.8125rem;color:var(--muted)">解压即用 · 绿色便携</span>
+      </a>
+    </div>
+    <p style="text-align:center;margin-top:24px;font-size:0.8125rem;color:var(--muted)">
+      需要 AI 功能？安装后去设置页填入 DeepSeek 或 Kimi 的 API Key<br>
+      <a href="https://github.com/dragooooon6666-ux/CampusOS" style="color:var(--primary)">查看源码与使用指南 →</a>
+    </p>
   </div>
 </section>
 
