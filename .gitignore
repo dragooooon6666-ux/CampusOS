@@ -216,3 +216,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+config/settings.json
+# CampusOS
+data/
+input/
+output/
+test_results.txt
+.pnp.*

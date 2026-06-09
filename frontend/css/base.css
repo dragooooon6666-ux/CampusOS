@@ -1,0 +1,36 @@
+/* ── Reset & Base ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+html{scroll-behavior:smooth}
+
+body{
+  font-family:var(--font-sans);
+  color:var(--ink);
+  background:var(--bg);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── Typography ── */
+h1{font-size:1.5rem;font-weight:600}
+h2{font-size:1.25rem;font-weight:600}
+h3{font-size:1.125rem;font-weight:600}
+p{font-size:0.9375rem;color:var(--muted)}
+
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ── Layout ── */
+.app-shell{display:flex;min-height:100vh}
+.sidebar{width:var(--sidebar-width);background:var(--surface);border-right:1px solid var(--border);flex-shrink:0;height:100vh;overflow-y:auto;position:fixed;top:0;left:0;z-index:50}
+.main-content{flex:1;max-width:var(--content-max);padding:var(--space-xl);margin-left:var(--sidebar-width)}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ── Reduced motion ── */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}
+}
