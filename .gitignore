@@ -223,3 +223,4 @@ input/
 output/
 test_results.txt
 .pnp.*
+release/
