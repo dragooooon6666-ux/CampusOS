@@ -90,7 +90,7 @@ export async function render(el) {
   });
 
   // 加载表单
-  async function loadForm(docType) {
+  const loadForm = async (docType) => {
     const { fields } = await api.get(`/api/writing/form-fields/${encodeURIComponent(docType)}`);
     const formDiv = document.getElementById('wcForm');
     formDiv.innerHTML = fields.map(f => `
@@ -104,7 +104,7 @@ export async function render(el) {
   }
 
   // 加载模板选项
-  async function loadTemplates(docType) {
+  const loadTemplates = async (docType) => {
     const select = document.getElementById('wcTemplate');
     select.innerHTML = '<option value="">默认模板</option>';
     try {

@@ -224,3 +224,6 @@ output/
 test_results.txt
 .pnp.*
 release/
+FileOrganizer/
+.claude/
+.superpowers/
