@@ -63,3 +63,43 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+
+---
+
+## CampusOS 项目特定规范
+
+### 打包前安全检查（强制）
+
+每次打包 exe 之前，必须运行：
+
+```bash
+python scripts/pre_build_check.py
+```
+
+检查项：
+- 源代码中是否泄露 API Key（sk-*, ghp_*, 等）
+- `config/settings.example.json` 是否空白
+- `.gitignore` 是否包含 `config/settings.json`
+- `CampusOS.spec` 是否只打包示例配置
+
+### API Key 管理
+
+- `config/settings.json` — 仅开发用，已 gitignore，**绝不打包**
+- `config/settings.example.json` — 空白模板，随 exe 分发
+- 打包时 PyInstaller spec 只打包 `settings.example.json`
+- 首次运行时 `launcher.py` 自动复制 example → settings.json
+
+### 打包命令
+
+```bash
+# 1. 安全检查
+python scripts/pre_build_check.py
+
+# 2. 构建
+rm -rf dist build
+python -m PyInstaller CampusOS.spec --noconfirm --clean
+
+# 3. 更新 release 文件
+cp dist/CampusOS.exe release/CampusOS/
+cd release && makensis setup.nsi
+```
