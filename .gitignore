@@ -221,6 +221,7 @@ config/settings.json
 data/
 input/
 output/
+config/settings.json
 test_results.txt
 .pnp.*
 release/

@@ -10,6 +10,13 @@ if getattr(sys, 'frozen', False):
         os.makedirs(os.path.join(base, d), exist_ok=True)
     # 把 _MEIPASS 加入 sys.path，Python 才能 import backend
     sys.path.insert(0, sys._MEIPASS)
+    # 首次运行：从模板创建 settings.json（不含 API Key）
+    import shutil
+    settings_dest = os.path.join(base, 'config', 'settings.json')
+    if not os.path.exists(settings_dest):
+        settings_src = os.path.join(sys._MEIPASS, 'config', 'settings.example.json')
+        if os.path.exists(settings_src):
+            shutil.copy(settings_src, settings_dest)
     # 修复: PyInstaller console=False 导致 stdout/stderr 为 None，
     # uvicorn 日志初始化调用 .isatty() 时崩溃
     if sys.stdout is None or sys.stderr is None:

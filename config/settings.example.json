@@ -1,0 +1,9 @@
+{
+  "AI_MODE": true,
+  "AI_PROVIDER": "deepseek",
+  "AI_MODEL": "deepseek-chat",
+  "AI_API_KEYS": {
+    "deepseek": "",
+    "kimi": ""
+  }
+}
