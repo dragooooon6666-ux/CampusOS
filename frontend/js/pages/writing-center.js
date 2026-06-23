@@ -211,7 +211,7 @@ export async function render(el) {
 
 let currentDoc = null;
 
-function renderEditor(doc) {
+async function renderEditor(doc) {
   const editor = document.getElementById('wcEditor');
   // 解析 ## 标题为 sections
   const sections = parseSections(doc.content);

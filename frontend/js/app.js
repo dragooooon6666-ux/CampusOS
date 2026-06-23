@@ -22,7 +22,7 @@ route('/projects', async (el) => {
 route('/writing', async (el) => {
   el.innerHTML = '<p style="padding:20px;color:var(--muted)">加载中...</p>';
   try {
-    const mod = await import('./pages/writing-center.js');
+    const mod = await import('./pages/writing-center.js?v=4');
     await mod.render(el);
   } catch(e) {
     el.innerHTML = `<p style="color:var(--error);padding:20px">加载失败：${e.message}<br><pre style="font-size:0.75rem;margin-top:8px">${e.stack}</pre></p>`;
