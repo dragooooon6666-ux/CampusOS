@@ -216,7 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
-config/settings.json
 # CampusOS
 data/
 input/
@@ -228,3 +227,4 @@ release/
 FileOrganizer/
 .claude/
 .superpowers/
+promo/
