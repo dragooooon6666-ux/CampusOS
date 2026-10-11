@@ -17,10 +17,11 @@ from backend.routes.projects import router as projects_router
 from backend.routes.export import router as export_router
 from backend.routes.settings_api import router as settings_api_router
 from backend.services.file_watcher import monitor
+from backend.version import __version__
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-app = FastAPI(title="CampusOS", version="0.1.0")
+app = FastAPI(title="CampusOS", version=__version__)
 
 # CORS（开发时允许 localhost 任意端口）
 app.add_middleware(
@@ -82,7 +83,7 @@ app.include_router(settings_api_router)
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "version": "0.1.0"}
+    return {"status": "ok", "version": __version__}
 
 
 # ── 静态文件（前端） ──

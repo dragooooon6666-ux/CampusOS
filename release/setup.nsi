@@ -1,9 +1,11 @@
 ﻿; CampusOS 安装程序
 ; NSIS 3.x
 
+!define VERSION "0.1.3"
+
 Unicode true
 Name "CampusOS"
-OutFile "CampusOS-Setup-v0.1.2.exe"
+OutFile "CampusOS-Setup-v${VERSION}.exe"
 InstallDir "$PROGRAMFILES\CampusOS"
 InstallDirRegKey HKLM "Software\CampusOS" "InstallDir"
 RequestExecutionLevel admin
@@ -43,7 +45,7 @@ Section "CampusOS" SecMain
   WriteRegStr HKLM "Software\CampusOS" "InstallDir" "$INSTDIR"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusOS" "DisplayName" "CampusOS 校园事务智能操作系统"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusOS" "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusOS" "DisplayVersion" "0.1.2"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusOS" "DisplayVersion" "${VERSION}"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusOS" "Publisher" "CampusOS"
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusOS" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusOS" "NoRepair" 1

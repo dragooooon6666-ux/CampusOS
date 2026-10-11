@@ -14,6 +14,7 @@ a = Analysis(
     ],
     hiddenimports=[
         'backend', 'backend.database', 'backend.config', 'backend.main', 'backend.paths',
+        'backend.version',
         'backend.models', 'backend.models.organization', 'backend.models.monitor',
         'backend.routes', 'backend.routes.organizations', 'backend.routes.monitor',
         'backend.routes.files', 'backend.routes.writing', 'backend.routes.projects',
@@ -23,6 +24,8 @@ a = Analysis(
         'backend.services.template_service', 'backend.services.project_service',
         'backend.services.file_extractor',
         'backend.utils', 'backend.utils.content_extractor', 'backend.utils.naming',
+        # 以下两个是函数内部 import，显式列出避免 PyInstaller 漏打包
+        'backend.utils.rule_classifier',
         'uvicorn.logging', 'uvicorn.loops', 'uvicorn.protocols',
         'watchdog', 'docx', 'PyPDF2', 'openpyxl', 'pptx',
     ],
