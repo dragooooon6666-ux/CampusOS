@@ -5,16 +5,15 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
+        # 只打包程序自带资源；input/data/output 是用户数据，
+        # 由 launcher.py 在 exe 所在目录创建，绝不能打进 exe
         ('frontend', 'frontend'),
         ('backend', 'backend'),
-        ('data', 'data'),
-        ('input', 'input'),
         ('config/settings.example.json', 'config'),
-        ('templates', 'templates'),
         ('PRODUCT.md', '.'),
     ],
     hiddenimports=[
-        'backend', 'backend.database', 'backend.config', 'backend.main',
+        'backend', 'backend.database', 'backend.config', 'backend.main', 'backend.paths',
         'backend.models', 'backend.models.organization', 'backend.models.monitor',
         'backend.routes', 'backend.routes.organizations', 'backend.routes.monitor',
         'backend.routes.files', 'backend.routes.writing', 'backend.routes.projects',

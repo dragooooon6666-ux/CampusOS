@@ -5,17 +5,11 @@
 import json
 import os
 import threading
-from pathlib import Path
 
-import sys
+from backend.paths import get_base_dir
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-# PyInstaller 打包后，配置应保存在 exe 所在目录，而非捆绑的临时目录
-if getattr(sys, 'frozen', False):
-    _EXE_DIR = Path(sys.executable).parent
-    SETTINGS_FILE = _EXE_DIR / "config" / "settings.json"
-else:
-    SETTINGS_FILE = BASE_DIR / "config" / "settings.json"
+# 打包后配置保存在 exe 所在目录，而非捆绑的临时目录
+SETTINGS_FILE = get_base_dir() / "config" / "settings.json"
 
 AI_PROVIDERS = {
     "deepseek": {

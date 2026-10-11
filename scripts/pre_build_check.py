@@ -141,6 +141,31 @@ def check_pyinstaller_spec():
             error(spec, "CampusOS.spec 可能直接打包了 settings.json（含 Key）")
 
 
+def check_user_data_not_packed():
+    """检查用户数据目录没有被误打包进 exe。
+
+    打包 input/data 会导致：体积暴涨、用户数据丢失、他人隐私文件被分发。
+    """
+    spec = ROOT / "CampusOS.spec"
+    if not spec.exists():
+        return
+
+    with open(spec, encoding="utf-8") as f:
+        content = f.read()
+
+    for name in ("input", "data", "output"):
+        if f"('{name}', '{name}')" in content:
+            error(spec, f"datas 包含用户数据目录 '{name}/' — 会把用户文件打进 exe，且打包版数据无法持久化")
+
+    # input/ 里残留的测试文件不会被打包，但建议清理
+    input_dir = ROOT / "input"
+    if input_dir.exists():
+        files = [f for f in input_dir.rglob("*") if f.is_file()]
+        if files:
+            size_mb = sum(f.stat().st_size for f in files) / 1024 / 1024
+            warning(input_dir, f"input/ 残留 {len(files)} 个文件（{size_mb:.0f}MB）— 不会被打包，可放心，但建议清理")
+
+
 def main():
     print("=" * 50)
     print("CampusOS 打包前安全检查")
@@ -171,6 +196,10 @@ def main():
     # 4. 检查 PyInstaller spec
     print("\n[4] 检查打包配置...")
     check_pyinstaller_spec()
+
+    # 5. 检查用户数据是否被误打包
+    print("\n[5] 检查用户数据目录...")
+    check_user_data_not_packed()
 
     # ── 结果 ──
     print("\n" + "=" * 50)

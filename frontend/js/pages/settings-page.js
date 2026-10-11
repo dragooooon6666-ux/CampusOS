@@ -34,6 +34,7 @@ export async function render(el) {
         <button id="btnTestAI">🔌 测试连接</button>
       </div>
       <p id="stAIStatus" style="margin-top:12px;font-size:0.8125rem"></p>
+      <div id="stRefine"></div>
     </div>
   </section>
 
@@ -92,6 +93,11 @@ export async function render(el) {
   .st-key-row .key-status{font-size:0.6875rem;padding:3px 8px;border-radius:6px;font-weight:500}
   .key-ok{background:oklch(0.97 0.03 170);color:oklch(0.50 0.12 170)}
   .key-none{background:oklch(0.97 0.02 80);color:oklch(0.55 0.10 80)}
+  .st-refine{margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;gap:16px;align-items:center;justify-content:space-between}
+  .st-refine-title{font-size:0.8125rem;font-weight:600;margin-bottom:4px}
+  .st-refine-desc{font-size:0.75rem;color:var(--muted);line-height:1.5;margin:0;max-width:420px}
+  .st-refine button{flex-shrink:0}
+  .st-refine button:disabled{opacity:0.5;cursor:not-allowed}
   .st-monitor-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.8125rem}
   .st-monitor-row:last-child{border-bottom:none}
   .st-org-row{margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
@@ -112,6 +118,7 @@ export async function render(el) {
   }
   document.getElementById('btnSaveAI').addEventListener('click', saveAIConfig);
   document.getElementById('btnTestAI').addEventListener('click', testAI);
+  renderRefine(aiConfig);
 
   // Monitors
   renderMonitors(monitorSources);
@@ -203,6 +210,56 @@ async function testAI(){
     status.innerHTML = `<span style="color:var(--error)">❌ 测试失败：${e.message}</span>`;
   }
   btn.textContent = '🔌 测试连接';
+}
+
+/**
+ * 「初步分类 → AI 精分类」入口。
+ * 没配 Key 时也能用系统（按文件名规则分类），这里告诉用户还差哪一步。
+ */
+async function renderRefine(aiConfig){
+  const box = document.getElementById('stRefine');
+  if(!box) return;
+
+  let pending = 0;
+  try{ pending = (await api.get('/api/files/stats/pending')).count; }catch(e){ return; }
+  if(!pending){ box.innerHTML=''; return; }
+
+  const hasKey = Object.values(aiConfig?.providers||{}).some(v=>v.has_key);
+
+  box.innerHTML = `
+    <div class="st-refine">
+      <div>
+        <div class="st-refine-title">还有 ${pending} 个文件是初步分类</div>
+        <p class="st-refine-desc">${hasKey
+          ? '这些文件按文件名分好了大类。让 AI 读一遍内容，标题会更贴近原文，分类也更准。'
+          : '没有 API Key 时，文件按文件名规则分好大类，可以正常用。填好 Key 保存后，可以让 AI 分得更准。'}</p>
+      </div>
+      <button id="btnRefine" ${hasKey?'':'disabled'}>🔍 用 AI 重新分类</button>
+    </div>`;
+
+  const btn = document.getElementById('btnRefine');
+  btn.addEventListener('click', async ()=>{
+    btn.disabled = true;
+    btn.textContent = '分类中...';
+    let done = 0;
+    try{
+      // 分批请求：每个文件都要调一次 AI，整批塞一个请求会等太久
+      while(true){
+        const r = await api.post('/api/files/reanalyze?limit=5');
+        if(r.checked === 0) break;
+        if(r.updated === 0){
+          toast('AI 没能分析成功，先点「测试连接」确认 Key 可用', 'error');
+          break;
+        }
+        done += r.updated;
+        btn.textContent = `分类中... 已完成 ${done}`;
+      }
+      if(done) toast(`已用 AI 重新分类 ${done} 个文件`, 'success');
+    }catch(e){
+      toast('重新分类失败：'+e.message, 'error');
+    }
+    renderRefine(aiConfig);
+  });
 }
 
 function renderOrgs(orgs){

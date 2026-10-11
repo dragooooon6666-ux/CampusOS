@@ -5,7 +5,9 @@ SQLite 数据库：连接 + 建表 + 默认数据
 import sqlite3
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+from backend.paths import get_base_dir
+
+BASE_DIR = get_base_dir()
 DB_PATH = BASE_DIR / "data" / "campusos.db"
 
 SCHEMA = """

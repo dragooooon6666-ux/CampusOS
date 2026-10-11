@@ -228,3 +228,6 @@ FileOrganizer/
 .claude/
 .superpowers/
 promo/
+
+# check_real_files.py 生成的真实文件核对表（含个人文件清单，不入库）
+分类核对表.csv

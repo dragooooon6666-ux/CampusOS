@@ -9,6 +9,7 @@ from fastapi import APIRouter, HTTPException, Query, UploadFile, File
 from backend.services.file_extractor import process_entry
 
 from backend.database import get_db
+from backend.paths import get_base_dir
 from backend.services.archiver import archive_file
 
 router = APIRouter(prefix="/api/files", tags=["files"])
@@ -61,8 +62,7 @@ def get_file(file_id: int):
 @router.post("/upload")
 async def upload_files(files: list[UploadFile] = File(...)):
     """拖拽/选择上传文件到 input 文件夹，自动归档。支持压缩包自动解压。"""
-    BASE_DIR = Path(__file__).resolve().parent.parent.parent
-    input_dir = BASE_DIR / "input"
+    input_dir = get_base_dir() / "input"
     input_dir.mkdir(parents=True, exist_ok=True)
 
     saved = []
@@ -125,8 +125,7 @@ async def upload_files(files: list[UploadFile] = File(...)):
 @router.post("/scan", status_code=201)
 def scan_input():
     """手动扫描 input 文件夹并归档所有文件"""
-    BASE_DIR = Path(__file__).resolve().parent.parent.parent
-    input_dir = BASE_DIR / "input"
+    input_dir = get_base_dir() / "input"
 
     if not input_dir.exists():
         return {"scanned": 0, "archived": 0, "errors": []}
@@ -144,6 +143,43 @@ def scan_input():
             errors.append({"file": fp.name, "error": str(e)})
 
     return {"scanned": len(files), "archived": archived, "errors": errors}
+
+
+@router.get("/stats/pending")
+def pending_reanalysis_count():
+    """还能用 AI 进一步提升分类的文件数量。
+
+    路径用两级，避免被 GET /{file_id} 抢先匹配。
+    """
+    db = get_db()
+    row = db.execute("SELECT COUNT(*) AS n FROM files WHERE ai_analyzed = 0").fetchone()
+    db.close()
+    return {"count": row["n"]}
+
+
+@router.post("/reanalyze")
+def reanalyze_pending(limit: int = Query(50, le=200)):
+    """把「仅规则分类」的文件补一次 AI 分析，配置 Key 后调用。"""
+    from backend.services.archiver import reanalyze_file
+
+    db = get_db()
+    rows = db.execute(
+        "SELECT id FROM files WHERE ai_analyzed = 0 ORDER BY id LIMIT ?", (limit,)
+    ).fetchall()
+    db.close()
+
+    updated = 0
+    skipped = 0
+    for r in rows:
+        try:
+            if reanalyze_file(r["id"]):
+                updated += 1
+            else:
+                skipped += 1
+        except Exception:
+            skipped += 1
+
+    return {"checked": len(rows), "updated": updated, "skipped": skipped}
 
 
 @router.put("/{file_id}")

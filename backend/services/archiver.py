@@ -9,12 +9,13 @@ from datetime import datetime
 from pathlib import Path
 
 from backend.database import get_db
+from backend.paths import get_base_dir
 from backend.services.file_analyzer import analyze_file
 from backend.utils.naming import NON_TEXT_EXTENSIONS as _NON_TEXT
 
 logger = logging.getLogger(__name__)
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = get_base_dir()
 OUTPUT_DIR = BASE_DIR / "output"
 WINDOWS_INVALID = r'<>:"/\|?*'
 
@@ -117,11 +118,12 @@ def archive_file(file_path: Path, org_id: int | None = None, folder_id: int | No
         doc_date = analysis["doc_date"]
         author = analysis["author"]
     else:
-        # 非文本文件：按扩展名回退
-        from backend.utils.naming import get_file_category_label
-        doc_type = get_file_category_label(file_path)
+        # AI 不可用（未配置 Key / 分析失败）：走规则分类
+        from backend.utils.rule_classifier import classify
+
+        doc_type = classify(file_path.name).doc_type
         title = file_path.stem
-        doc_date = ""
+        doc_date = datetime.fromtimestamp(file_path.stat().st_mtime).strftime("%Y年%m月%d日")
         author = ""
 
     # 2. 构建目标路径
@@ -169,3 +171,54 @@ def archive_file(file_path: Path, org_id: int | None = None, folder_id: int | No
 
     logger.info("归档: %s → %s", file_path.name, dest_path.relative_to(OUTPUT_DIR))
     return dict(row)
+
+
+def reanalyze_file(file_id: int) -> dict | None:
+    """对「仅经过规则分类」的文件补一次 AI 分析，并移动到新的归档位置。
+
+    用户配置 Key 之后调用，把初步分类升级为精分类。
+    已分析过、文件不存在、AI 不可用时返回 None。
+    """
+    db = get_db()
+    row = db.execute("SELECT * FROM files WHERE id = ?", (file_id,)).fetchone()
+    db.close()
+    if not row or row["ai_analyzed"]:
+        return None
+
+    old_path = Path(row["stored_path"])
+    if not old_path.exists():
+        return None
+
+    analysis = analyze_file(old_path)
+    if not analysis:
+        return None
+
+    # 按 AI 结果重建归档路径
+    new_path = _build_dest_path(
+        old_path, row["organization_id"], row["folder_id"],
+        analysis["doc_type"], analysis["title"], analysis["doc_date"],
+    )
+    new_path.parent.mkdir(parents=True, exist_ok=True)
+
+    original = new_path
+    counter = 1
+    while new_path.exists() and new_path != old_path:
+        new_path = original.parent / f"{original.stem}({counter}){original.suffix}"
+        counter += 1
+
+    if new_path != old_path:
+        shutil.move(str(old_path), str(new_path))
+
+    db = get_db()
+    db.execute(
+        """UPDATE files SET doc_type = ?, title = ?, doc_date = ?, author = ?,
+           stored_name = ?, stored_path = ?, ai_analyzed = 1 WHERE id = ?""",
+        (analysis["doc_type"], analysis["title"], analysis["doc_date"], analysis["author"],
+         new_path.name, str(new_path), file_id),
+    )
+    db.commit()
+    updated = db.execute("SELECT * FROM files WHERE id = ?", (file_id,)).fetchone()
+    db.close()
+
+    logger.info("精分类: %s → [%s] %s", row["original_name"], analysis["doc_type"], analysis["title"])
+    return dict(updated)

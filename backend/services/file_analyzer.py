@@ -110,6 +110,20 @@ USER_PROMPT_TEMPLATE = """请分析以下文件：
 {content_context}"""
 
 
+# 含个人信息的文档类型：只按文件名分类，不把内容发送给 AI
+SENSITIVE_DOC_TYPES = {"通讯录", "简历", "收集表", "签到表", "统计表"}
+
+# 文件名出现这些词，也视为可能含个人信息
+SENSITIVE_NAME_HINTS = ("电话", "手机", "身份证", "学号", "联系方式", "花名册")
+
+
+def _is_sensitive(file_path: Path, hint: str | None) -> bool:
+    """判断文件是否可能含个人信息，从而不把内容发给 AI。"""
+    if hint in SENSITIVE_DOC_TYPES:
+        return True
+    return any(kw in file_path.name for kw in SENSITIVE_NAME_HINTS)
+
+
 def _build_user_prompt(file_path: Path, content_preview: ContentPreview | None = None) -> str:
     """构建发送给 AI 的用户消息"""
     # 文件名关键词检测
@@ -118,9 +132,14 @@ def _build_user_prompt(file_path: Path, content_preview: ContentPreview | None =
     if hint:
         filename_hint = f"\n【文件名提示】文件名包含明确类型关键词，该文件很可能是「{hint}」类文档。请优先考虑此分类。"
 
-    context = content_preview.ai_context if content_preview else ""
-    if not context:
-        context = "（无法提取文件内容，仅根据文件名判断）"
+    if _is_sensitive(file_path, hint):
+        # 隐私保护：通讯录/简历/名单这类文件不上传内容
+        logger.info("隐私保护：跳过内容分析 [%s]", file_path.name)
+        context = "（该文件可能包含个人信息，出于隐私保护未读取内容，请仅根据文件名判断类型）"
+    else:
+        context = content_preview.ai_context if content_preview else ""
+        if not context:
+            context = "（无法提取文件内容，仅根据文件名判断）"
 
     return USER_PROMPT_TEMPLATE.format(
         original_name=file_path.name,
@@ -257,21 +276,14 @@ def analyze_file(file_path: Path) -> dict | None:
 
     # 媒体文件：仅根据文件名 + 扩展名分类，不调 AI 读内容
     if extension in NON_TEXT_EXTENSIONS:
-        hint = detect_type_from_filename(file_path.name)
-        if hint:
-            mtime = datetime.fromtimestamp(file_path.stat().st_mtime)
-            return {
-                "doc_type": hint,
-                "title": _sanitize_text(file_path.stem, max_len=20) or file_path.stem,
-                "doc_date": _format_date_cn(mtime),
-                "author": "",
-            }
-        # 完全无法识别 → 用扩展名大类
-        from backend.utils.naming import get_file_category_label
+        from backend.utils.rule_classifier import classify
+
+        result = classify(file_path.name)
+        mtime = datetime.fromtimestamp(file_path.stat().st_mtime)
         return {
-            "doc_type": get_file_category_label(file_path),
+            "doc_type": result.doc_type,
             "title": file_path.stem,
-            "doc_date": _format_date_cn(datetime.fromtimestamp(file_path.stat().st_mtime)),
+            "doc_date": _format_date_cn(mtime),
             "author": "",
         }
 
